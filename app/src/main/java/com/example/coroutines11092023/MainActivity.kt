@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.Random
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +33,23 @@ class MainActivity : AppCompatActivity() {
         // Coroutine scope: Tao ra pham vi de su dung coroutine
         // Dispatchers.IO: luong background
         CoroutineScope(Dispatchers.IO).launch {
-            val value = executeTask()
-            Log.d("pphat", value)
+            // Tao gia tri A
+            // Tao gia tri B
+            // Ket qua = A + B
+            val valueA = generateValueA()
+            val valueB = generateValueB()
+            val result = valueA + valueB
+            Log.d("pphat", result.toString())
         }
     }
 
-    suspend fun executeTask(): String {
+    suspend fun generateValueA(): Int {
         delay(1000)
-        return "for test"
+        return Random().nextInt(10)
+    }
+
+    suspend fun generateValueB(): Int {
+        delay(1500)
+        return Random().nextInt(10)
     }
 }
