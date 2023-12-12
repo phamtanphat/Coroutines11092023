@@ -2,10 +2,13 @@ package com.example.coroutines11092023
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
@@ -29,25 +32,13 @@ class MainActivity : AppCompatActivity() {
         // Coroutine scope: Tao ra pham vi de su dung coroutine
         // Dispatchers.IO: luong background
         CoroutineScope(Dispatchers.IO).launch {
-           launch {
-               for (i in 1..100) {
-                   Log.d("pphat", "A $i")
-               }
-
-               withContext(Dispatchers.Main) {
-                   Toast.makeText(this@MainActivity, "Finish A", Toast.LENGTH_SHORT).show()
-               }
-           }
-
-           launch {
-               for (i in 101..200) {
-                   Log.d("pphat", "B $i")
-               }
-
-               withContext(Dispatchers.Main) {
-                   Toast.makeText(this@MainActivity, "Finish B", Toast.LENGTH_SHORT).show()
-               }
-           }
+            val value = executeTask()
+            Log.d("pphat", value)
         }
+    }
+
+    suspend fun executeTask(): String {
+        delay(1000)
+        return "for test"
     }
 }
