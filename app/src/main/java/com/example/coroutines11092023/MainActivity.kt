@@ -62,35 +62,45 @@ class MainActivity : AppCompatActivity() {
 //            job.cancel() // cancels the job
 //            log("main: Now I can quit.")
 
-            val job = launch {
-                try {
-                    repeat(1000) { i ->
-                        log("I'm sleeping $i ...")
-                        delay(500L)
-                    }
-                } finally {
-                    // Tranh thủ close resource trong này đi nha :D
-                    withContext(NonCancellable) {
-                        delay(1000L)
-                        log("I'm running finally")
-                    }
-                }
-            }
-            delay(1300L) // delay a bit
-            log("main: I'm tired of waiting!")
-            job.cancel() // cancels the job
-            log("main: Now I can quit.")
+//            val job = launch {
+//                try {
+//                    repeat(1000) { i ->
+//                        log("I'm sleeping $i ...")
+//                        delay(500L)
+//                    }
+//                } finally {
+//                    // Tranh thủ close resource trong này đi nha :D
+//                    withContext(NonCancellable) {
+//                        delay(1000L)
+//                        log("I'm running finally")
+//                    }
+//                }
+//            }
+//            delay(1300L) // delay a bit
+//            log("main: I'm tired of waiting!")
+//            job.cancel() // cancels the job
+//            log("main: Now I can quit.")
+
+            val deferredA = async { generateValueA() }
+            val deferredB = async { generateValueB() }
+
+            val total = deferredA.await() + deferredB.await()
+            log("Total $total")
         }
     }
 
-    suspend fun generateValueA() {
+    suspend fun generateValueA(): String {
         delay(2000)
-        Log.d("BBB", "A: ${Random().nextInt(10)}")
+        val valueA = Random().nextInt(10)
+        log("A: $valueA")
+        return valueA.toString()
     }
 
-    suspend fun generateValueB() {
+    suspend fun generateValueB(): String {
         delay(1000)
-        Log.d("BBB", "B: ${Random().nextInt(20)}")
+        val valueB = Random().nextInt(20)
+        log("B: $valueB")
+        return valueB.toString()
     }
 
     fun log(message: String) {
