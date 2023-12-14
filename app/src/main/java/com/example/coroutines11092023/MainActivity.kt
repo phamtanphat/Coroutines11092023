@@ -36,20 +36,22 @@ class MainActivity : AppCompatActivity() {
             // Tao gia tri A
             // Tao gia tri B
             // Ket qua = A + B
-            val valueA = generateValueA()
-            val valueB = generateValueB()
-            val result = valueA + valueB
-            Log.d("pphat", result.toString())
+            val jobA = launch { generateValueA() }
+            jobA.join()
+
+            val jobB = launch { generateValueB() }
+            jobB.join()
+            Log.d("BBB", "A va B finish")
         }
     }
 
-    suspend fun generateValueA(): Int {
-        delay(1000)
-        return Random().nextInt(10)
+    suspend fun generateValueA() {
+        delay(2000)
+        Log.d("BBB", "A: ${Random().nextInt(10)}")
     }
 
-    suspend fun generateValueB(): Int {
-        delay(1500)
-        return Random().nextInt(10)
+    suspend fun generateValueB() {
+        delay(1000)
+        Log.d("BBB", "B: ${Random().nextInt(20)}")
     }
 }
