@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -44,18 +45,37 @@ class MainActivity : AppCompatActivity() {
             // jobB.join()
             // Log.d("BBB", "A va B finish")
 
-            val startTime = System.currentTimeMillis()
+//            val startTime = System.currentTimeMillis()
+//            val job = launch {
+//                var nextPrintTime = startTime
+//                var i = 0
+//                while (isActive) {
+//                    if (System.currentTimeMillis() >= nextPrintTime) {
+//                        log("job: I'm sleeping ${i++} ...")
+//                        nextPrintTime += 500L
+//                    }
+//                }
+//            }
+//
+//            delay(1300L) // delay a bit
+//            log("main: I'm tired of waiting!")
+//            job.cancel() // cancels the job
+//            log("main: Now I can quit.")
+
             val job = launch {
-                var nextPrintTime = startTime
-                var i = 0
-                while (isActive) {
-                    if (System.currentTimeMillis() >= nextPrintTime) {
-                        log("job: I'm sleeping ${i++} ...")
-                        nextPrintTime += 500L
+                try {
+                    repeat(1000) { i ->
+                        log("I'm sleeping $i ...")
+                        delay(500L)
+                    }
+                } finally {
+                    // Tranh thủ close resource trong này đi nha :D
+                    withContext(NonCancellable) {
+                        delay(1000L)
+                        log("I'm running finally")
                     }
                 }
             }
-
             delay(1300L) // delay a bit
             log("main: I'm tired of waiting!")
             job.cancel() // cancels the job
