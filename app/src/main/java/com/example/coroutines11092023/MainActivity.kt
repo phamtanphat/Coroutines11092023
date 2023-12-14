@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -34,7 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         // Coroutine scope: Tao ra pham vi de su dung coroutine
         // Dispatchers.IO: luong background
-        CoroutineScope(Dispatchers.IO).launch {
+        val handler = CoroutineExceptionHandler { context, throwable ->
+            log(throwable.message.toString())
+        }
+
+        CoroutineScope(Dispatchers.IO + handler).launch {
             // Tao gia tri A
             // Tao gia tri B
             // Ket qua = A + B
@@ -81,11 +86,17 @@ class MainActivity : AppCompatActivity() {
 //            job.cancel() // cancels the job
 //            log("main: Now I can quit.")
 
-            val deferredA = async { generateValueA() }
-            val deferredB = async { generateValueB() }
+//            val deferredA = async { generateValueA() }
+//            val deferredB = async { generateValueB() }
+//
+//            val total = deferredA.await() + deferredB.await()
+//            log("Total $total")
 
-            val total = deferredA.await() + deferredB.await()
-            log("Total $total")
+            launch {
+                log("Start coroutine")
+                throw Exception("Loi")
+                log("Finish coroutine")
+            }
         }
     }
 
